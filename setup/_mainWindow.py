@@ -212,6 +212,7 @@ def set_milling_path_axis_alginement(self):
     val = self.findChild(QComboBox, "comboALIGN").currentIndex()
     self.glWidget.type.fab.align_ax = val
 
+
 @pyqtSlot()
 def set_incremental(self):
     val = self.findChild(QCheckBox, "checkINC").isChecked()
@@ -250,7 +251,7 @@ def set_nccode_as_standard(self):
 @pyqtSlot()
 def set_sbp_as_standard(self):
     bool = self.findChild(QRadioButton, "radioSBP").isChecked()
-    if bool: self.glWidget.type.fab.ext = "sbp"
+    if bool: self.glWidget.type.fab.ext = "cix"
 
 @pyqtSlot()
 def new_file(self):

@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import os
+import PostProcessor.BiesseCIX as cix
 
 def angle_between(vector_1, vector_2, normal_vector=[]):
     unit_vector_1 = vector_1 / np.linalg.norm(vector_1)
@@ -144,6 +145,55 @@ class MillVertex:
         if self.is_arc:
             self.arc_ctr = rotate_vector_around_axis(self.arc_ctr, [0,0,1], ang)
             self.arc_ctr = np.array(self.arc_ctr)
+            
+class MillMove:
+    def __init__(self,MouvIndex,startpoint,endpoint):
+        d = 3
+        self.reset()
+        self.Start_X = startpoint.xstr	
+        self.Start_Y = startpoint.ystr
+        self.Start_Z = startpoint.zstr
+        self.End_X = endpoint.xstr
+        self.End_Y = endpoint.ystr
+        self.End_Z = endpoint.zstr
+        if startpoint.x == endpoint.x: self.Modal_X = True
+        if startpoint.y == endpoint.y: self.Modal_Y = True
+        if startpoint.z == endpoint.z: self.Modal_Z = True
+        if MouvIndex < 2: self.FirstMouv = True
+        self.Vect_X = str(round(endpoint.x - startpoint.x,d))
+        self.Vect_Y = str(round(endpoint.y - startpoint.y,d))
+        self.Vect_Z = str(round(endpoint.z - startpoint.z,d))
+
+    
+    def reset(self):
+        self.FirstMouv = False
+        self.LastMove = False
+        self.Start_X = 0
+        self.Start_Y = 0
+        self.Start_Z = 0
+        self.End_X = 0
+        self.End_Y = 0
+        self.End_Z = 0
+        self.Center_X = 0
+        self.Center_Y = 0
+        self.Center_Z = 0
+        self.Is_Arc = False
+        self.Clockwise = False
+        self.R = 0
+        self.Modal_X = False
+        self.Modal_Y = False
+        self.Modal_Z = False   
+        self.Vect_X = 0
+        self.Vect_Y = 0
+        self.Vect_Z = 0
+        self.ToolDia = 0
+        self.ToolName = ''
+	
+    #def string(value):
+    	# return str(round(value,3))
+    
+
+
 class Fabrication:
     def __init__(self,parent,tol=0.15,dia=6.00,ext="gcode",align_ax=0,interp=True, spe=400, spi=6000):
         self.parent = parent
@@ -185,6 +235,8 @@ class Fabrication:
             if fdir==0: rot_ang=-rot_ang
             #
             file_name = filename_tsu[:-4] + "_"+names[n]+"."+self.ext
+            #print(filename_tsu[:-4])
+            #print(file_name)
             file = open(file_name,"w")
             if self.ext=="gcode" or self.ext=="nc":
                 ###initialization .goce and .nc
@@ -205,6 +257,9 @@ class Fabrication:
                 file.write("MS,6.67,6.67\n\n")
                 file.write("TR 6000\n\n")
                 file.write("SO 1,1\n")
+            elif self.ext =="cix":
+                print("CIX")
+                file.write(cix.Progleadingline(names[n],self.parent.real_tim_dims))
             else:
                 print("Unknown extension:", self.ext)
 
@@ -212,12 +267,22 @@ class Fabrication:
             for i,mv in enumerate(self.parent.gcodeverts[n]):
                 mv.scale_and_swap(fax,fdir,self.parent.ratio,self.parent.real_tim_dims,coords,d,n)
                 if comp_ax!=fax: mv.rotate(rot_ang,d)
-                if i>0: pmv = self.parent.gcodeverts[n][i-1]
+                move = MillMove(i,mv,mv)
+                if i>0: 
+                    pmv = self.parent.gcodeverts[n][i-1]
+                    move = MillMove(i,pmv,mv)
+                
+                move.ToolDia = self.dia 
+                if i == len(self.parent.gcodeverts): move.LastMove = True
+                             
+                
                 # check segment angle
                 arc = False
                 clockwise = False
                 if i>0 and connected_arc(mv,pmv):
                     arc = True
+                    move.Is_Arc = True
+                    move.R = str(round(self.dia,d))
                     vec1 = mv.pt-mv.arc_ctr
                     vec1 = vec1/np.linalg.norm(vec1)
                     zvec = np.array([0,0,1])
@@ -225,8 +290,10 @@ class Fabrication:
                     vec2 = pmv.pt-mv.arc_ctr
                     vec2 = vec2/np.linalg.norm(vec2)
                     diff_ang = angle_between(xvec,vec2)
-                    if diff_ang>0.5*math.pi: clockwise = True
-
+                    if diff_ang>0.5*math.pi:
+                        clockwise = True
+                        move.clockwise = True			
+		
                 #write to file
                 if self.ext=="gcode" or self.ext=="nc":
                     if arc and self.interp:
@@ -267,6 +334,10 @@ class Fabrication:
                         else: file.write(" ,")
                         if i==0 or mv.z!=pmv.z: file.write(mv.zstr+"\n")
                         else: file.write(" \n")
+                elif self.ext=="cix":
+                    if i>0:
+                        file.write(cix.OutputFeed(move))                	
+                	
             #end
             if self.ext=="gcode" or self.ext=="nc":
                 file.write("M5 (Spindle stop)\n")
@@ -277,6 +348,11 @@ class Fabrication:
                 file.write("SO 1,0\n")
                 file.write("END\n")
                 file.write("'%\n")
-
+            elif self.ext=="cix":
+                file.write(cix.ProgTrailingLine())
+            
             print("Exported",file_name)
             file.close()
+
+
+

@@ -726,8 +726,52 @@
         <item>
          <widget class="QRadioButton" name="radioSBP">
           <property name="text">
-           <string>*.sbp</string>
+           <string>*.cix</string>
           </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Type output</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboALIGN">
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+          <property name="currentText">
+           <string>gcode</string>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>gcode</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>nc</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>sbn</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>cix</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>

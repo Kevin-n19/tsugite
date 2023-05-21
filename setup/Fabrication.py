@@ -234,6 +234,7 @@ class Fabrication:
             rot_ang = angle_between(aax,comp_vec,normal_vector=zax)
             if fdir==0: rot_ang=-rot_ang
             #
+            print (self.ext)
             file_name = filename_tsu[:-4] + "_"+names[n]+"."+self.ext
             #print(filename_tsu[:-4])
             #print(file_name)

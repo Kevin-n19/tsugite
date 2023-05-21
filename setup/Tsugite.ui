@@ -704,7 +704,7 @@
         </property>
        </widget>
       </item>
-      <item>
+<!--      <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QRadioButton" name="radioGCODE">
@@ -731,18 +731,18 @@
          </widget>
         </item>
        </layout>
-      </item>
+      </item> -->
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QLabel" name="label_13">
+         <widget class="QLabel" name="Label_14">
           <property name="text">
            <string>Type output</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboALIGN">
+         <widget class="QComboBox" name="FileExt">
           <property name="editable">
            <bool>false</bool>
           </property>

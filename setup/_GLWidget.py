@@ -29,9 +29,10 @@ def initializeGL(self):
     aax = self.parent.findChild(QComboBox, "comboALIGN").currentIndex()
     inc = self.parent.findChild(QCheckBox, "checkINC").isChecked()
     fin = self.parent.findChild(QCheckBox, "checkFIN").isChecked()
-    if self.parent.findChild(QRadioButton, "radioGCODE").isChecked(): ext = "gcode"
-    elif self.parent.findChild(QRadioButton, "radioNC").isChecked(): ext = "nc"
-    elif self.parent.findChild(QRadioButton, "radioSBP").isChecked(): ext = "cix"
+    #if self.parent.findChild(QRadioButton, "radioGCODE").isChecked(): ext = "gcode"
+    #elif self.parent.findChild(QRadioButton, "radioNC").isChecked(): ext = "nc"
+    #elif self.parent.findChild(QRadioButton, "radioSBP").isChecked(): ext = "cix"
+    ext = str(self.parent.findChild(QComboBox, "FileExt").currentIndex())
     self.type = Types(self,fs=[[[2,0]],[[2,1]]],sax=sax,dim=dim,ang=ang, td=[dx,dy,dz], fabtol=tol, fabdia=dia, fspe=spe, fspi=spi, fabext=ext, align_ax=aax, incremental=inc, finterp=fin)
     self.show = Show(self,self.type)
 

@@ -304,9 +304,10 @@ class mainWindow(QMainWindow):
     from _mainWindow import set_interpolation
     from _mainWindow import set_millingpath_view
     from _mainWindow import export_gcode
-    from _mainWindow import set_gcode_as_standard
-    from _mainWindow import set_nccode_as_standard
-    from _mainWindow import set_sbp_as_standard
+    #from _mainWindow import set_gcode_as_standard
+    #from _mainWindow import set_nccode_as_standard
+    #from _mainWindow import set_sbp_as_standard
+    from _mainWindow import set_file_ext
     from _mainWindow import new_file
     from _mainWindow import open_file
     from _mainWindow import save_file

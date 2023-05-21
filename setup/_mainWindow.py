@@ -69,9 +69,10 @@ def setupUi(self):
     self.findChild(QCheckBox, "checkFIN").stateChanged.connect(self.set_interpolation)
     self.findChild(QPushButton, "buttonPATH").clicked.connect(self.set_millingpath_view)
     self.findChild(QPushButton, "buttonGCODE").clicked.connect(self.export_gcode)
-    self.findChild(QRadioButton, "radioGCODE").toggled.connect(self.set_gcode_as_standard)
-    self.findChild(QRadioButton, "radioNC").toggled.connect(self.set_nccode_as_standard)
-    self.findChild(QRadioButton, "radioSBP").toggled.connect(self.set_sbp_as_standard)
+    #self.findChild(QRadioButton, "radioGCODE").toggled.connect(self.set_gcode_as_standard)
+    #self.findChild(QRadioButton, "radioNC").toggled.connect(self.set_nccode_as_standard)
+    #self.findChild(QRadioButton, "radioSBP").toggled.connect(self.set_sbp_as_standard)
+    self.findChild(QComboBox, "FileExt").currentTextChanged.connect(self.set_file_ext)
     #---MENU
     #---File
     self.findChild(QAction, "actionNew").triggered.connect(self.new_file)
@@ -212,6 +213,10 @@ def set_milling_path_axis_alginement(self):
     val = self.findChild(QComboBox, "comboALIGN").currentIndex()
     self.glWidget.type.fab.align_ax = val
 
+@pyqtSlot()
+def set_file_ext(self):
+    val = self.findChild(QComboBox, "FileExt").currentText()
+    self.glWidget.type.fab.ext = val
 
 @pyqtSlot()
 def set_incremental(self):
@@ -238,20 +243,20 @@ def export_gcode(self):
         self.glWidget.type.combine_and_buffer_indices(milling_path=True)
     self.glWidget.type.fab.export_gcode(filename_tsu=self.filename)
 
-@pyqtSlot()
-def set_gcode_as_standard(self):
-    bool = self.findChild(QRadioButton, "radioGCODE").isChecked()
-    if bool: self.glWidget.type.fab.ext = "gcode"
+#@pyqtSlot()
+#ef set_gcode_as_standard(self):
+#    bool = self.findChild(QRadioButton, "radioGCODE").isChecked()
+#    if bool: self.glWidget.type.fab.ext = "gcode"
 
-@pyqtSlot()
-def set_nccode_as_standard(self):
-    bool = self.findChild(QRadioButton, "radioNC").isChecked()
-    if bool: self.glWidget.type.fab.ext = "nc"
+#@pyqtSlot()
+#def set_nccode_as_standard(self):
+#    bool = self.findChild(QRadioButton, "radioNC").isChecked()
+#    if bool: self.glWidget.type.fab.ext = "nc"
 
-@pyqtSlot()
-def set_sbp_as_standard(self):
-    bool = self.findChild(QRadioButton, "radioSBP").isChecked()
-    if bool: self.glWidget.type.fab.ext = "cix"
+#@pyqtSlot()
+#def set_sbp_as_standard(self):
+#    bool = self.findChild(QRadioButton, "radioSBP").isChecked()
+#    if bool: self.glWidget.type.fab.ext = "sbp"
 
 @pyqtSlot()
 def new_file(self):
@@ -335,9 +340,10 @@ def set_ui_values(self):
     self.findChild(QCheckBox, "checkINC").setChecked(self.glWidget.type.incremental)
     self.findChild(QCheckBox, "checkFIN").setChecked(self.glWidget.type.fab.interp)
     self.findChild(QComboBox, "comboALIGN").setCurrentIndex(self.glWidget.type.fab.align_ax)
-    if self.glWidget.type.fab.ext=="gcode":
-        self.findChild(QRadioButton, "radioGCODE").setChecked(True)
-    elif self.glWidget.type.fab.ext=="sbp":
-        self.findChild(QRadioButton, "radioSBP").setChecked(True)
-    elif self.glWidget.type.fab.ext=="nc":
-        self.findChild(QRadioButton, "radioNC").setChecked(True)
+    self.findChild(QComboBox, "FileExt").setCurrentIndex(self.glWidget.type.fab.ext)
+    #if self.glWidget.type.fab.ext=="gcode":
+    #    self.findChild(QRadioButton, "radioGCODE").setChecked(True)
+    #elif self.glWidget.type.fab.ext=="sbp":
+    #    self.findChild(QRadioButton, "radioSBP").setChecked(True)
+    #elif self.glWidget.type.fab.ext=="nc":
+    #    self.findChild(QRadioButton, "radioNC").setChecked(True)
